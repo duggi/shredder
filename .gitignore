@@ -1,0 +1,12 @@
+## Mac OS meta
+.DS_Store
+Icon
+Icon?
+
+
+## Personal
+*.env
+*.bak
+_archive/
+_src/
+_out/

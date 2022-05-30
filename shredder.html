@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fleet Shredder</title>
+  <link rel="stylesheet" href="shredder.css">
+  <link rel="shortcut icon" type="image/png" href="shredder-favicon.png">
+
+  <script src="lib/json2csv.js"></script>
+  <script src="lib/lodash.min.js"></script>
+  <script src="lib/faa-grp.js"></script>
+  <script src="lib/atlas-grp.js"></script>
+  <script src="lib/avianis-grp.js"></script>
+  <script src="lib/console.js"></script>
+
+  <script>
+    /*
+     * Shreds fleets and returns the shreds
+     *
+     * @param aircraft has arbitrary shape but should contain a tail number
+     * @param fleet = {
+     *          aircraft: array of aircraft json objects,
+     *          matchProp: tail number property name in aircraft
+     *        }
+     *
+     */
+
+    // filters `fleet` by `matchProp` values of `xFleet`
+    function match(fleet, xFleet) {
+      let matches = [];
+      const matchProp = fleet.matchProp;
+      const xMatch = _.map(xFleet.collection, xFleet.matchProp);
+      xMatch.forEach (matchVal => {matches
+        .push(_.filter(fleet.collection, _.matches({[matchProp]: matchVal})))
+      });
+      // flatten and remove falsy
+      matches = _.compact(matches.flat());
+      return matches;
+    }
+
+    // wraps an array of `aircraft` with `fleet` shape
+    function wrap(aircraft, fleet) {
+      return result = {
+        collection: aircraft,
+        matchProp: fleet.matchProp
+      }
+    }
+
+    // splits `fleet` by `matchProp` values of `xFleet` into matches and diffs
+    // matches and diffs json are wrapped with `fleet` shape
+    // csv is also provided
+    function split(fleet, xFleet) {
+      const aircraft = fleet.collection;
+      let result;
+      let matches = match(fleet, xFleet);
+      if (matches.length > 0) {
+        result = {
+          matchesJson: wrap(matches, fleet),
+          matchesCsv: csv(matches)
+        }
+      }
+      let diffs = _.difference(aircraft, matches);
+      if ( diffs.length > 0) {
+        result = {...result,
+          diffsJson: wrap(diffs, fleet),
+          diffsCsv: csv(diffs)
+        }
+      }
+      return result;
+    }
+
+    function csv(val) {
+      return json2csv.parse(val);
+    }
+
+    function display(id, val) {
+      const ele = document.getElementById(id);
+      ele.innerHTML = csv(val);
+      ele.after(`rows: ${val.collection.length}`);
+    }
+
+    // laziness
+    const s = split.bind(split);
+    const w = wrap.bind(wrap);
+    const fa = faa;
+    const at = atlas;
+    const av = avianis;
+
+  </script>
+</head>
+
+<body>
+  <div class="title">
+    <img src="shredder.png" alt="">
+    <h1>Fleet Shredder</h1>
+  </div>
+  <hr>
+  <div class="container">
+    <div class="faa">
+      <h2>FAA ∩ Atlas</h2>
+      <textarea id="faa-atlas-grp"></textarea>
+      / Tails in FAA also in Atlas
+      <hr>
+      <h2>FAA ∆ Atlas</h2>
+      <textarea id="faa-atlas-diff"></textarea>
+      / Tails in FAA not in Atlas
+      <hr>
+      <h2>FAA ∩ Avianis</h2>
+      <textarea id="faa-avianis-grp"></textarea>
+      / Tails in FAA also in Avianis
+      <hr>
+      <h2>FAA ∆ Avianis</h2>
+      <textarea id="faa-avianis-diff"></textarea>
+      / Tails in FAA not in Avianis
+    </div>
+    <div class="atlas">
+      <h2>Atlas ∩ FAA</h2>
+      <textarea id="atlas-grp"></textarea>
+      / Tails in Atlas also in FAA
+      <hr>
+      <h2>Atlas ∆ FAA</h2>
+      <textarea id="atlas-diff"></textarea>
+      / Tails in Atlas not in FAA
+    </div>
+    <div class="avianis">
+      <h2>Avianis ∩ FAA</h2>
+      <textarea id="avianis-grp"></textarea>
+      / Tails in Avianis also in FAA
+      <hr>
+      <h2>Avianis ∆ FAA</h2>
+      <textarea id="avianis-diff"></textarea>
+      / Tails in Avianis not in FAA
+    </div>
+  </div>
+  <hr>
+  <code>👉  Shred even harder in the console 👈</code>
+
+  <script>
+    let tmp = split(faa, atlas);
+    display('faa-atlas-grp', tmp.matchesJson);
+    display('faa-atlas-diff', tmp.diffsJson);
+
+    tmp = split(faa, avianis);
+    display('faa-avianis-grp', tmp.matchesJson);
+    display('faa-avianis-diff', tmp.diffsJson);
+
+    tmp = split(atlas, faa);
+    display('atlas-grp', tmp.matchesJson);
+    display('atlas-diff', tmp.diffsJson);
+
+    tmp = split(avianis, faa);
+    display('avianis-grp', tmp.matchesJson);
+    display('avianis-diff', tmp.diffsJson);
+  </script>
+</body>
+</html>

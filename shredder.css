@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
+
+body {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 12px;
+  background: #f9f8f7;
+  padding: 2em;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+textarea {
+  background: none;
+  border: none;
+  overflow-y: auto;
+  resize: vertical;
+  width: 100%;
+  height: 10em;
+  margin-bottom: 1em;
+}
+
+hr {
+  height: 1px;
+  border: none;
+  border-top: 1px solid #a0e;
+  margin: 2em 0;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+}
+.title > * {
+  display: inline-block;
+}
+.title > img {
+  width: 48px;
+  height: 48px;
+  margin-right: 1em;
+}
+
+.container {
+  display: flex;
+  align-content: flex-start;
+}
+.container > div {
+  flex-grow: 1;
+  padding: 2em;
+}
+
+.faa * {
+  color: #321;
+}
+.atlas * {
+  color: #36f;
+}
+.avianis * {
+  color: #f60;
+}
+
+.atlas {
+  border: 1px solid #a0e;
+  border-top: none;
+  border-bottom: none;
+}
