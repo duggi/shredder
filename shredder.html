@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Fleet Shredder</title>
+  <title>Shredder</title>
   <link rel="stylesheet" href="shredder.css">
   <link rel="shortcut icon" type="image/png" href="shredder-favicon.png">
 
@@ -38,7 +38,7 @@
       return matches;
     }
 
-    // wraps an array of `aircraft` with `fleet` shape
+    // wraps an array of `aircraft` with `fleet` adapter
     function wrap(aircraft, fleet) {
       return result = {
         collection: aircraft,
@@ -92,9 +92,16 @@
 <body>
   <div class="title">
     <img src="shredder.png" alt="">
-    <h1>Fleet Shredder</h1>
+    <h1>Shredder</h1>
   </div>
   <hr>
+  <div class="instruction">
+    <ul>
+      <li>Splits, matches, or diffs two arbitrary arrays of json objects by specifying the key name to match from in each set</li>
+      <li>Sample datasets are in lib/</li>
+      <li>👉  Shred even harder in the JavaScript console 👈</li>
+    </ul>
+  </div>
   <div class="container">
     <div class="faa">
       <h2>FAA ∩ Atlas</h2>
@@ -133,7 +140,6 @@
     </div>
   </div>
   <hr>
-  <code>👉  Shred even harder in the console 👈</code>
 
   <script>
     let tmp = split(faa, atlas);

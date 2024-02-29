@@ -41,6 +41,19 @@ hr {
   margin-right: 1em;
 }
 
+.instruction {
+  padding: 1rem;
+  border: 1px dotted #9ac;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+  background: #f6f9fc;
+}
+
+.instruction ul {
+  margin: 0;
+  padding-left: 1rem;
+}
+
 .container {
   display: flex;
   align-content: flex-start;
